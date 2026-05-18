@@ -1,0 +1,63 @@
+<div class="todo-page" [ngClass]="{ 'dark': isDark }">
+
+    <div class="todo-card">
+
+        <!-- Theme Toggle Button -->
+        <button class="toggle" (click)="toggleTheme()">
+            {{ isDark ? '☀ Light Mode' : '🌙 Dark Mode' }}
+        </button>
+
+        <h2>My Tasks</h2>
+
+        <!-- Success/Info Message -->
+        <div class="message" *ngIf="showMessage">
+            {{ showMessage }}
+        </div>
+
+        <!-- Add Task Input Form -->
+        <div class="input-box">
+            <input [(ngModel)]="title" placeholder="Write a task..." (keyup.enter)="addTodo()" />
+            <button (click)="addTodo()">Add</button>
+        </div>
+
+        <!-- Tasks List -->
+        <ul *ngIf="todos.length > 0">
+            <li *ngFor="let todo of todos">
+
+                <!-- Left Side: Checkbox & Task Title / Edit Input -->
+                <div class="task-left">
+                    <input type="checkbox" (change)="toggleTodo(todo._id)" [checked]="todo.completed" />
+
+                    <!-- Normal View Mode -->
+                    <span *ngIf="editingId !== todo._id" [ngClass]="{ 'done': todo.completed }">
+                        {{ todo.title }}
+                    </span>
+
+                    <!-- Inline Edit Mode Input -->
+                    <input *ngIf="editingId === todo._id" [(ngModel)]="editText" (keyup.enter)="saveEdit(todo._id)"
+                        class="edit-input" />
+                </div>
+
+                <!-- Right Side: Action Buttons -->
+                <div class="task-actions">
+                    <!-- Toggle between Edit and Save Button -->
+                    <button *ngIf="editingId !== todo._id" (click)="startEdit(todo)" class="btn-edit"
+                        title="Edit">✏️</button>
+                    <button *ngIf="editingId === todo._id" (click)="saveEdit(todo._id)" class="btn-save"
+                        title="Save">✔️</button>
+
+                    <!-- Delete Button -->
+                    <button (click)="deleteTodo(todo._id)" class="btn-delete" title="Delete">🗑️</button>
+                </div>
+
+            </li>
+        </ul>
+
+        <!-- Empty State Message -->
+        <p *ngIf="todos.length === 0" class="empty">
+            No tasks yet 🚀
+        </p>
+
+    </div>
+
+</div>
